@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>훈민정음 비밀 방탈출: 음운 비밀 결사대</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', 'Noto Sans KR', sans-serif; }
+        body { background-color: #1a1612; color: #f4efa8; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        .container { background-color: #2b231b; border: 3px solid #8c6d46; border-radius: 12px; padding: 25px; max-width: 680px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
+        h1 { text-align: center; color: #e0a96d; margin-bottom: 20px; font-size: 1.7rem; border-bottom: 2px dashed #8c6d46; padding-bottom: 12px; text-shadow: 1px 1px 3px #000; }
+        .story-box { background: #1c1712; padding: 18px; border-radius: 8px; border-left: 5px solid #e0a96d; margin-bottom: 20px; line-height: 1.6; font-size: 0.95rem; color: #e0d8c3; }
+        .quiz-card { background: #3b3025; padding: 22px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #574635; }
+        .quiz-title { font-size: 1.2rem; color: #fff; margin-bottom: 10px; font-weight: bold; border-bottom: 1px solid #6e5843; padding-bottom: 5px; }
+        .role-badge { display: inline-block; background: #e0a96d; color: #1a1612; padding: 4px 10px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; margin-bottom: 12px; }
+        .hint-box { background: #19140e; border: 1px solid #8c6d46; padding: 15px; border-radius: 6px; color: #fff; margin-bottom: 15px; font-size: 0.95rem; line-height: 1.6; }
+        .hint-box b { color: #f4efa8; }
+        .input-group { display: flex; gap: 10px; margin-top: 15px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+        select, input[type="text"] { padding: 12px; border-radius: 5px; border: 1px solid #8c6d46; background: #19140e; color: #fff; font-size: 1rem; }
+        input[type="text"] { flex-grow: 1; }
+        button { padding: 12px 20px; background-color: #8c6d46; color: #fff; border: none; border-radius: 5px; font-size: 0.95rem; cursor: pointer; transition: 0.2s; font-weight: bold; }
+        button:hover { background-color: #e0a96d; color: #000; }
+        button.btn-nav { background-color: #4a3c2c; color: #ccc; }
+        button.btn-nav:hover { background-color: #6e5843; color: #fff; }
+        button.btn-switch { background-color: #684a2d; color: #f4efa8; border: 1px solid #e0a96d; font-size: 0.85rem; padding: 6px 12px; }
+        button.btn-switch:hover { background-color: #8c6d46; }
+        .msg { margin-top: 12px; font-weight: bold; text-align: center; font-size: 0.95rem; }
+        .success { color: #81c784; }
+        .error { color: #e57373; }
+        .hidden { display: none !important; }
+        .clear-screen { text-align: center; padding: 20px 0; }
+        
+        .secret-code-card {
+            background: #231f1a;
+            border: 2px dashed #e0a96d;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .code-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f4efa8;
+            letter-spacing: 4px;
+            margin: 10px 0;
+            text-shadow: 0 0 10px rgba(224, 169, 109, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📜 집현전 비밀 조사관: 훈민정음 구출작전</h1>
+
+    <!-- 1. 프롤로그 및 역할 선택 -->
+    <div id="screen-start">
+        <div class="story-box">
+            <p><b>[시나리오 프롤로그]</b></p>
+            <p>1446년 조선, 집현전 밀실에 &lt;훈민정음&gt;의 원리가 4개의 암호로 봉인되었습니다!</p>
+            <p>모둠원들과 협동하여 각자의 단서를 풀고, <b>조사관 1, 2, 3, 4의 정답을 순서대로 조합</b>해 자물쇠를 해제하세요.</p>
+        </div>
+        <div class="input-group" style="flex-direction: column;">
+            <select id="team-select">
+                <option value="">-- 소속 모둠 선택 --</option>
+                <option value="1">1 모둠</option><option value="2">2 모둠</option>
+                <option value="3">3 모둠</option><option value="4">4 모둠</option>
+                <option value="5">5 모둠</option><option value="6">6 모둠</option>
+                <option value="7">7 모둠</option><option value="8">8 모둠</option>
+            </select>
+            <select id="member-mode-select">
+                <option value="">-- 모둠 인원 및 본인 역할 구분 --</option>
+                <option value="4">4명 모둠 (1인 1역할)</option>
+                <option value="3-leader">3명 모둠 [리더] (본인 역할 + 조사관 4 겸임)</option>
+                <option value="3-member">3명 모둠 [팀원] (1인 1역할)</option>
+            </select>
+            <select id="role-select">
+                <option value="">-- 담당 조사관(역할) 선택 --</option>
+                <option value="1">조사관 1 (1번 단서)</option>
+                <option value="2">조사관 2 (2번 단서)</option>
+                <option value="3">조사관 3 (3번 단서)</option>
+                <option value="4">조사관 4 (4번 단서)</option>
+            </select>
+            <button type="button" onclick="startGame()" style="margin-top: 10px;">밀실 수색 시작하기</button>
+        </div>
+        <p id="start-msg" class="msg error"></p>
+    </div>
+
+    <!-- 2. [1번 방] -->
+    <div id="screen-room1" class="hidden">
+        <div class="quiz-card">
+            <div class="quiz-title">🚪 [1번 방] 초성자 제자 원리의 밀실 1</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="role-badge" id="role-display-1"></span>
+                <button type="button" class="btn-switch btn-switch-action hidden" id="switch-btn-1" onclick="toggleRole4(1)">🔄 조사관 4 단서 보기</button>
+            </div>
+            
+            <div class="story-box" style="font-size:0.88rem; margin-bottom:12px;">
+                조사관 1,2,3,4의 정답을 모아서 순서대로 연결하세요. (쉼표 구분 허용)
+            </div>
+
+            <div class="hint-box" id="hint-room1"></div>
+
+            <div class="input-group">
+                <input type="text" id="ans-1" placeholder="조합된 암호 입력 (예: 정답1,정답2,정답3,정답4)">
+            </div>
+            <div class="btn-group">
+                <button type="button" onclick="checkAnswer(1)" style="flex-grow: 1;">자물쇠 해제</button>
+                <button type="button" class="btn-nav" onclick="goNextRoom(1)">2번 방으로 ➡️</button>
+            </div>
+            <p id="msg-1" class="msg"></p>
+        </div>
+    </div>
+
+    <!-- 3. [2번 방] -->
+    <div id="screen-room2" class="hidden">
+        <div class="quiz-card">
+            <div class="quiz-title">🚪 [2번 방] 초성자 제자 원리의 밀실 2</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="role-badge" id="role-display-2"></span>
+                <button type="button" class="btn-switch btn-switch-action hidden" id="switch-btn-2" onclick="toggleRole4(2)">🔄 조사관 4 단서 보기</button>
+            </div>
+
+            <div class="story-box" style="font-size:0.88rem; margin-bottom:12px;">
+                이번 방에서도 4명의 단서를 한데 모아 순서대로 조합해야 합니다.
+            </div>
+
+            <div class="hint-box" id="hint-room2"></div>
+
+            <div class="input-group">
+                <input type="text" id="ans-2" placeholder="조합된 암호 입력">
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-nav" onclick="goRoom(1)">⬅️ 1번 방으로</button>
+                <button type="button" onclick="checkAnswer(2)" style="flex-grow: 1;">자물쇠 해제</button>
+                <button type="button" class="btn-nav" onclick="goNextRoom(2)">3번 방으로 ➡️</button>
+            </div>
+            <p id="msg-2" class="msg"></p>
+        </div>
+    </div>
+
+    <!-- 4. [3번 방] -->
+    <div id="screen-room3" class="hidden">
+        <div class="quiz-card">
+            <div class="quiz-title">🚪 [3번 방] 중성자 제자 원리의 밀실</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="role-badge" id="role-display-3"></span>
+                <button type="button" class="btn-switch btn-switch-action hidden" id="switch-btn-3" onclick="toggleRole4(3)">🔄 조사관 4 단서 보기</button>
+            </div>
+
+            <div class="story-box" style="font-size:0.88rem; margin-bottom:12px;">
+                모음(중성)의 제자 원리를 파악하여 관문을 여는 암호를 만드세요.
+            </div>
+
+            <div class="hint-box" id="hint-room3"></div>
+
+            <div class="input-group">
+                <input type="text" id="ans-3" placeholder="조합된 암호 입력">
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-nav" onclick="goRoom(2)">⬅️ 2번 방으로</button>
+                <button type="button" onclick="checkAnswer(3)" style="flex-grow: 1;">자물쇠 해제</button>
+                <button type="button" class="btn-nav" onclick="goNextRoom(3)">4번 방으로 ➡️</button>
+            </div>
+            <p id="msg-3" class="msg"></p>
+        </div>
+    </div>
+
+    <!-- 5. [4번 방] -->
+    <div id="screen-room4" class="hidden">
+        <div class="quiz-card">
+            <div class="quiz-title">🔐 [4번 방] 종성과 음운의 밀실</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span class="role-badge" id="role-display-4"></span>
+                <button type="button" class="btn-switch btn-switch-action hidden" id="switch-btn-4" onclick="toggleRole4(4)">🔄 조사관 4 단서 보기</button>
+            </div>
+
+            <div class="story-box" style="font-size:0.88rem; margin-bottom:12px;">
+                마지막 궤짝입니다! 4가지 숫자를 순서대로 합쳐 최종 암호를 완성하세요.
+            </div>
+
+            <div class="hint-box" id="hint-room4"></div>
+
+            <div class="input-group">
+                <input type="text" id="ans-4" placeholder="최종 암호 숫자 입력">
+            </div>
+            <div class="btn-group">
+                <button type="button" class="btn-nav" onclick="goRoom(3)">⬅️ 3번 방으로</button>
+                <button type="button" onclick="checkAnswer(4)" style="flex-grow: 1;">해례본 구출</button>
+            </div>
+            <p id="msg-4" class="msg"></p>
+        </div>
+    </div>
+
+    <!-- 6. 탈출 성공 화면 -->
+    <div id="screen-clear" class="hidden clear-screen">
+        <h2 style="color:#81c784; font-size:1.8rem; margin-bottom:15px;">🎉 훈민정음 구출 성공! 🎉</h2>
+        
+        <div class="story-box">
+            <p><b id="clear-info"></b></p>
+            <p>축하합니다! 조사관 여러분의 협동으로 &lt;훈민정음&gt;의 비밀을 풀고 무사히 구출해내었습니다.</p>
+        </div>
+
+        <div class="secret-code-card">
+            <p style="color:#e0a96d; font-weight:bold; font-size:1rem;">🍬 선생님 확인용 모둠 고유번호 🍬</p>
+            <div class="code-number" id="final-code">0000</div>
+            <p style="font-size:0.85rem; color:#ccc;">위 4자리 숫자를 선생님께 말씀드리고 사탕을 받으세요!</p>
+        </div>
+
+        <button type="button" onclick="location.reload()">처음으로 돌아가기</button>
+    </div>
+</div>
+
+<script>
+    let currentTeam = "";
+    let memberMode = "";
+    let baseRole = ""; // 원본 역할 (조사관 1~3)
+    let currentRole = ""; // 현재 화면 표시 역할
+
+    const roomCleared = { 1: false, 2: false, 3: false, 4: false };
+
+    const hintsRoom1 = {
+        "1": "🔍 <b>[조사관 1]</b> 가획의 원리는 기본자에 획을 더하는 것이다. 이것은 소리의 <b>[ ◯◯ ]</b>를 반영한 것이다.",
+        "2": "🔍 <b>[조사관 2]</b> 어금닛소리 기본자와 잇소리 기본자는 무엇인지 차례대로 쓰시오(쉼표나 띄어쓰기 없이 입력).",
+        "3": "🔍 <b>[조사관 3]</b> 혓소리 기본자에 획을 한 번 더해(가획) 만든 글자는 무엇인가?",
+        "4": "🔍 <b>[조사관 4]</b> 목구멍소리 기본자 'ㅇ'에 가획을 두 번 한 글자는 무엇인가?"
+    };
+
+    const hintsRoom2 = {
+        "1": "🔍 <b>[조사관 1]</b> 기본자에 획을 더해 소리의 세기를 반영하는 '가획의 원리'를 따르지 않고 만든 글자를 '이체자'라고 한다. 이체자 3개 중 어금닛소리에 해당하는 음운의 이름을 쓰시오.",
+        "2": "🔍 <b>[조사관 2]</b> 이체자 3개 중 반잇소리에 해당하는 음운의 이름을 쓰시오.",
+        "3": "🔍 <b>[조사관 3]</b> 'ㄲ, ㄸ, ㅃ'처럼 같은 자음을 나란히 붙여 쓰는 원리를 무엇이라 하는가?",
+        "4": "🔍 <b>[조사관 4]</b> ‘연서’란 <b>[ ◯◯◯ ]</b>을 표기하기 위해 순음자(ㅂ, ㅍ, ㅃ, ㅁ) 밑에 'ㅇ'을 이어 쓰는 원리이다."
+    };
+
+    const hintsRoom3 = {
+        "1": "🔍 <b>[조사관 1]</b> 중성의 제자 원리 중 '하늘의 둥근 모양'을 본뜬 것으로 현대에는 사라진 음운의 이름을 쓰시오.",
+        "2": "🔍 <b>[조사관 2]</b> 중성의 기본자 중 ‘ㅣ'는 <b>[ ◯◯ ]</b>이 서 있는 모양'을 본뜬 것이다.",
+        "3": "🔍 <b>[조사관 3]</b> 모음 기본자를 결합하여 만든 초출자 중 '하늘'과 '땅'이 결합한 양성모음, '하늘'과 '사람'이 결합한 양성모음을 차례대로 쓰시오.",
+        "4": "🔍 <b>[조사관 4]</b> '재출자' 중 'ㅜ'와 'ㅓ'에 하늘을 한 번 더 결합하여 만든 모음을 차례대로 쓰시오."
+    };
+
+    const hintsRoom4 = {
+        "1": "🔍 <b>[조사관 1]</b> 훈민정음 창제 당시 초성(자음) 기본자와 가획자, 이체자를 모두 합한 초성의 총 개수는 몇 개인가?",
+        "2": "🔍 <b>[조사관 2]</b> 훈민정음 중성(모음)의 기본자, 초출자, 재출자를 모두 합한 중성의 총 개수는 몇 개인가?",
+        "3": "🔍 <b>[조사관 3]</b> 훈민정음 해례본의 '종성해'에서는 <b>[ ◯ ]</b>개 글자만으로도 종성 표기를 충분히 할 수 있다고 설명했다.",
+        "4": "🔍 <b>[조사관 4]</b> 처음이 낮고 나중에 높은 소리를 나타내는 성조인 상성은 글자 왼쪽에 방점을 <b>[ ◯ ]</b>개 찍는다."
+    };
+
+    const answers = {
+        1: "세기ㄱㅅㄷㅎ",
+        2: "옛이응반치음각자병서순경음",
+        3: "아래아사람ㅗㅏㅠㅕ",
+        4: "171182"
+    };
+
+    function hideAllScreens() {
+        const screens = ["screen-start", "screen-room1", "screen-room2", "screen-room3", "screen-room4", "screen-clear"];
+        screens.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add("hidden");
+        });
+    }
+
+    function startGame() {
+        const teamSelect = document.getElementById("team-select");
+        const modeSelect = document.getElementById("member-mode-select");
+        const roleSelect = document.getElementById("role-select");
+        const msgEl = document.getElementById("start-msg");
+
+        currentTeam = teamSelect.value;
+        memberMode = modeSelect.value;
+        baseRole = roleSelect.value;
+        currentRole = baseRole;
+
+        if (!currentTeam || !memberMode || !baseRole) {
+            msgEl.innerText = "모든 항목을 선택해 주세요!";
+            return;
+        }
+
+        if (memberMode === '3-leader' && baseRole === '4') {
+            msgEl.innerText = "3인 모둠 리더는 본인의 역할(1~3)을 먼저 선택해 주세요! (조사관 4는 겸임 기능으로 자동 제공됩니다)";
+            return;
+        }
+
+        msgEl.innerText = "";
+        hideAllScreens();
+
+        const switchBtns = document.querySelectorAll('.btn-switch-action');
+        switchBtns.forEach(btn => {
+            if (memberMode === '3-leader') {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        });
+
+        document.getElementById("screen-room1").classList.remove("hidden");
+        updateRoomUI(1);
+    }
+
+    // 3인 모둠 리더 전용: 본인 역할 <-> 조사관 4 고정 토글
+    function toggleRole4(currentRoomNum) {
+        if (currentRole === '4') {
+            currentRole = baseRole;
+        } else {
+            currentRole = '4';
+        }
+        updateRoomUI(currentRoomNum);
+    }
+
+    function goRoom(target) {
+        hideAllScreens();
+        document.getElementById(`screen-room${target}`).classList.remove("hidden");
+        updateRoomUI(target);
+    }
+
+    function goNextRoom(currentRoomNum) {
+        if (!roomCleared[currentRoomNum]) {
+            const msgElement = document.getElementById(`msg-${currentRoomNum}`);
+            msgElement.className = "msg error";
+            msgElement.innerText = "🔒 먼저 이 방의 자물쇠를 해제해야 다음 방으로 이동할 수 있습니다!";
+            return;
+        }
+        goRoom(currentRoomNum + 1);
+    }
+
+    function updateRoomUI(roomNum) {
+        document.getElementById(`role-display-${roomNum}`).innerText = `조사관 ${currentRole} 전용 단서`;
+        
+        const btn = document.getElementById(`switch-btn-${roomNum}`);
+        if (btn) {
+            btn.innerText = currentRole === '4' ? `🔄 본인 단서(조사관 ${baseRole})로 돌아가기` : '🔄 조사관 4 단서 보기';
+        }
+
+        if(roomNum === 1) document.getElementById("hint-room1").innerHTML = hintsRoom1[currentRole];
+        if(roomNum === 2) document.getElementById("hint-room2").innerHTML = hintsRoom2[currentRole];
+        if(roomNum === 3) document.getElementById("hint-room3").innerHTML = hintsRoom3[currentRole];
+        if(roomNum === 4) document.getElementById("hint-room4").innerHTML = hintsRoom4[currentRole];
+    }
+
+    function checkAnswer(room) {
+        const rawInput = document.getElementById(`ans-${room}`).value;
+        const cleanedInput = rawInput.replace(/[\s,.\-\_]+/g, '');
+        const targetAns = answers[room].replace(/[\s,.\-\_]+/g, '');
+
+        const msgElement = document.getElementById(`msg-${room}`);
+
+        if (cleanedInput === targetAns) {
+            roomCleared[room] = true;
+            msgElement.className = "msg success";
+            msgElement.innerText = "🔓 자물쇠 해제 성공! 다음 관문으로 진행하세요.";
+            
+            setTimeout(() => {
+                hideAllScreens();
+                if (room < 4) {
+                    document.getElementById(`screen-room${room + 1}`).classList.remove("hidden");
+                    updateRoomUI(room + 1);
+                } else {
+                    const calculatedCode = 1443 + parseInt(currentTeam);
+                    document.getElementById("clear-info").innerText = `${currentTeam} 모둠 최종 완료`;
+                    document.getElementById("final-code").innerText = calculatedCode;
+                    document.getElementById("screen-clear").classList.remove("hidden");
+                }
+            }, 800);
+        } else {
+            msgElement.className = "msg error";
+            msgElement.innerText = "⚠️ 암호가 틀렸습니다. 모둠원들과 정답을 다시 확인해 보세요!";
+        }
+    }
+</script>
+</body>
+</html>
